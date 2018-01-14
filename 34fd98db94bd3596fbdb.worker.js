@@ -1,362 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>MemWallet - deterministic bitcoin wallet generator for Ethereum, Monero, Litecoin and Bitcoin</title>
-  <style>
-    body {
-      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      font-size: 17px;
-    }
-    p {
-      line-height: 24px;
-    }
-    .content {
-      max-width: 800px;
-      width: 800px;
-      margin: 0 auto;
-    }
-
-    .form {
-      border: 1px solid #ccc;
-      padding: 20px;
-      border-radius: 4px;
-      background-color: #fff;
-    }
-
-    .alert {
-      background-color: #f2dede;
-      border-radius: 4px;
-      border: solid 0.75px #ebcccc;
-      color: #a94442;
-      padding: 12px 20px;
-    }
-    .info {
-      background-color: #d9edf7;
-      color: #31708f;
-      border-radius: 4px;
-      border: solid 0.75px #bcdff1;
-      padding: 12px 20px;
-    }
-
-    h2 {
-      text-align: center;
-      font-size: 
-    }
-    h1 {
-      font-size: 40px;
-      letter-spacing: 2px;
-      margin: 20px 0;
-    }
-    .header {
-      margin: 0 0 50px 0;
-      text-align: center;
-      background-color: #222;
-      color: #fff;
-      padding: 20px;
-    }
-    .header h2 {
-      margin: 0 0 10px 0;
-      font-size: 20px;
-    }
-    .header h3 {
-      margin-top: 0;
-      font-size: 18px;
-    }
-    .form-label {
-      width: 300px;
-      float: left;
-      text-align: right;
-      padding-right: 10px;
-    }
-    .form-field {
-      width: 400px;
-      float: left;
-    }
-    .form-group {
-      padding-bottom: 15px;
-      overflow: hidden;
-    }
-    .form {
-      overflow: hidden;
-    }
-
-    input[type="text"], input[type="password"] {
-      color:#464a4c;
-      border-radius:4px;
-      width: 300px;
-      border: .75px solid #0003;
-      margin:0;
-      padding:8px 12px
-    }
-    input:focus {
-      border-color: #5cb3fd;
-    }
-    .currency-selector {
-      text-align: center;
-        margin-bottom: 20px;
-    }
-    a {
-      text-decoration: none;
-      color: #0275d8;
-    }
-    a:hover {
-      background-color: #ccc;
-    }
-
-    .progress {
-      display: flex;
-      overflow: hidden;
-      font-size: .75rem;
-      line-height: 1rem;
-      text-align: center;
-      background-color: #eceeef;
-      border-radius: 4px;
-    }
-    .progress-bar {
-      height: 1rem;
-      background-color: #0275d8;
-      background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-      background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-      background-image: linear-gradient(45deg,#fff3 25%,transparent 25%,transparent 50%,#fff3 50%,#fff3 75%,transparent 75%,transparent);
-      -webkit-background-size: 1rem 1rem;
-      background-size: 1rem 1rem;
-    }
-    .btn {
-      color: #fff;
-      background-color: #0275d8;
-      border-color: #0275d8;
-      display: block;
-      font-weight: 400;
-      line-height: 1.25;
-      text-align: center;
-      vertical-align: middle;
-      border: 1px solid transparent;
-      padding: .5rem 1rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      margin: 10px auto;
-      cursor: pointer;
-    }
-    .btn:disabled {
-      background-color: #0275d8;
-      border-color: #0275d8;
-      cursor: not-allowed;
-      opacity: .65;
-    }
-    .brand {
-      font-size: 1.1em;
-    }
-  </style>
-
-</head>
-<body>
-  <div class="header">
-    <h1>MemWallet</h1>
-    <h2>Like WrapWallet but for Altcoins</h2>
-    <h3>No external assets, to use offline just save this page</h3>
-  </div>
-  <div class="content">
-
-  <form class="form" autocomplete="off" onsubmit="return false;">
-    <div class="form-group currency-selector">
-      <label> <input name="coin" onclick="resetState()" checked value="bitcoin" type="radio"/> Bitcoin </label>
-      <label> <input name="coin" onclick="resetState()" value="ethereum" type="radio"/> Ethereum </label>
-      <label> <input name="coin" onclick="resetState()" value="litecoin" type="radio"/> Litecoin </label>
-      <label> <input name="coin" onclick="resetState()" value="monero" type="radio"/> Monero </label>
-
-    </div>
-    <div class="form-group">
-      <div class="form-label">Passphrase </div>
-      <div class="form-field">
-        <input type="password" id="passphrase" oninput="updateButton()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="form-label">Salt: (optional) <a href="#" onclick="toggle('info')">[?]</a></div>
-      <div class="form-field">
-        <input type="text" id="salt" oninput="resetState();" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      </div>
-    </div>
-    <div class="info" id="info" style="display: none">
-      <span class="brand">MemWallet</span> can use a salt to make your wallet stronger. Use, for example, your e-mail or phone number.
-      If you're unsure, please do it. <a href="#" onclick="toggle('info')">[Close]</a>
-    </div>
-
-
-    <div id="progress" style="display: none">
-      <center>Running scrypt...</center>
-      <div class="progress">
-        <div id="progress-bar" class="progress-bar" style="width: 50%"> </div>
-      </div>
-    </div>
-
-    <button id="btn" class="btn" disabled="" onclick="generate()">Generate</button>
-
-
-    <h2 style="display: none" id="wallet-title"></h2>
-    <div class="form-group" id="cnt-public" style="display: none">
-      <div class="form-label" id="label-public" ></div>
-      <div class="form-field"><input type="text" id="result-public" /></div>
-    </div>
-    <div class="form-group" id="cnt-private" style="display: none">
-      <div class="form-label" id="label-private"></div>
-      <div class="form-field"><input type="text" id="result-private" /></div>
-    </div>
-
-    <div class="form-group" id="cnt-public-view" style="display: none">
-      <div class="form-label" id="label-public-view" ></div>
-      <div class="form-field"><input type="text" id="result-public-view" /></div>
-    </div>
-    <div class="form-group" id="cnt-private-view" style="display: none">
-      <div class="form-label" id="label-private-view" ></div>
-      <div class="form-field"><input type="text" id="result-private-view" /></div>
-    </div>
-    <div class="form-group" id="cnt-public-spend" style="display: none">
-      <div class="form-label" id="label-public-spend" ></div>
-      <div class="form-field"><input type="text" id="result-public-spend" /></div>
-    </div>
-    <div class="form-group" id="cnt-private-spend" style="display: none">
-      <div class="form-label" id="label-private-spend" ></div>
-      <div class="form-field"><input type="text" id="result-private-spend" /></div>
-    </div>
-  </form>
-
-  <p id="online-alert" class="alert"><strong>You are online.</strong> For maximum security is better that you save this page and generate the address in a computer disconnected from the internet.</p>
-  <p id="js-alert" class="alert">Javascript is disabled. <span class="brand">MemWallet</span> needs javascript to work </p>
-  <script> document.getElementById('js-alert').style.display = 'none'; </script>
-
-  <p>
-    <span class="brand">MemWallet</span> is a deterministic cryptocurrency address generator, like <a href="https://keybase.io/warp/">WrapWallet</a>, but it works for Ethereum, Litecoin, Monero and Bitcoin.
-    You never have to save or store your private key anywhere. Just pick a really good password - many random words, for example - and never use it for anything else.
-  </p>
-
-  <p>Given the same Passphrase and Salt, <span class="brand">MemWallet</span> will always generate the same address and private key, so if you only need to remember your password to access your funds.</p>
-
-  <p>
-      For more information on why this is safer than a regular brainwallet, see <a href="https://keybase.io/warp/">WrapWallet</a>'s help,
-      <span class="brand">MemWallet</span> is a re-implementation of WarpWallet, but it works for other currencies.
-      WarpWallet and <span class="brand">MemWallet</span> use the same algorithm, so WarpWallet and <span class="brand">MemWallet</span> will generate
-      the same Bitcoin address for a given Passphrase and salt.
-  </p>
-
-  The algorithm behind <span class="brand">MemWallet</span>:
-  <table class="table table-condensed" style="font-size: 0.7em; font-family: mono;">
-    <tr><td valign="top" align="right">b</td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">1 for Bitcoin, 2 for Litecoin, 3 for Ethereum and 4 for Monero</td></tr>
-    <tr><td valign="top" align="right">seed<sub>1</sub></td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">scrypt(key=(passphrase||b), salt=(salt||b), N=2<sup>18</sup>, r=8, p=1, dkLen=32)</td></tr>
-    <tr><td valign="top" align="right">seed<sub>2</sub></td><td align="center" valign="top">=</td><td valign="top" align="left">pbkdf2(key=(passphrase||(b+1)), salt=(salt||(b+1)), c=2<sup>16</sup>, dkLen=32, prf=SHA256)</td></tr>
-    <tr><td valign="top" align="right">wallet</td><td align="center" valign="top">=</td><td valign="top" align="left">generate_wallet(seed=(seed<sub>1</sub> ⊕ seed<sub>2</sub>))</td></tr>
-  </table>
-
-  <p>&nbsp;</p>
-  <hr/>
-  <p>&nbsp;</p>
-  <center>
-    <p><span class="brand">MemWallet</span> Was made with ♥ By <a href="https://github.com/dvdbng">David Bengoa</a></p>
-
-    <p>Source code is in <a href="https://github.com/dvdbng/memwallet">Github</a>, and so is a go implementation of the same algorithm.</p>
-  </center>
-  <p>&nbsp;</p>
-
-
-  <!--
-    Javascript is left un-minimized so it's easy to audit it offline
-  -->
-<script>
-function setKeyResult(name, show, label, value){
-  i('cnt-' + name).style.display = show ? 'block' : 'none';
-  i('label-' + name).textContent = show ? label : '';
-  i('result-' + name).value = show ? value : '';
-}
-
-function titleCase(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function generate() {
-  var passphrase = document.getElementById('passphrase').value;
-  var salt = document.getElementById('salt').value;
-  var currency = document.querySelector('[name=coin]:checked').value;
-  var progress_blk = i('progress');
-  var progress_bar = i('progress-bar');
-
-  for(var el of document.querySelectorAll('.form input')) el.disabled = true;
-  i('btn').style.display = 'none';
-
-  mw.generateWallet(passphrase, salt, currency, function(progress, result) {
-    progress_blk.style.display = !result ? 'block' : 'none';
-    progress_bar.style.width = progress*100 + '%';
-    if(result){
-      for(var el of document.querySelectorAll('.form input')) el.disabled = false;
-      i('wallet-title').style.display = 'block';
-      i('wallet-title').textContent = 'Your ' + titleCase(currency) + ' wallet',
-
-      setKeyResult('public', true, 'Public ' + titleCase(currency) + ' address', result.public);
-      setKeyResult('private', currency != 'monero', 'Private key', result.private);
-
-      setKeyResult('private-spend', currency == 'monero', 'Private Spend key', result.private_spend);
-      setKeyResult('public-spend',  currency == 'monero', 'Public Spend key', result.public_spend);
-      setKeyResult('public-view',   currency == 'monero', 'Public View key', result.public_view);
-      setKeyResult('private-view',  currency == 'monero', 'Private View key', result.private_view);
-    }
-  });
-}
-
-function i(id){
-  return document.getElementById(id);
-}
-
-function updateButton(){
-  var passphrase = i('passphrase').value;
-  var button = i('btn');
-  resetState();
-  if(passphrase.length == 0) {
-    button.disabled = true;
-    button.textContent = 'Generate';
-  } else if (passphrase.length < 12) {
-    button.disabled = false;
-    button.textContent = 'Consider a larger passpharase';
-  } else {
-    button.disabled = false;
-    button.textContent = 'Generate';
-  }
-}
-
-function resetState(){
-  setKeyResult('public',        false);
-  setKeyResult('private',       false);
-  setKeyResult('private-spend', false);
-  setKeyResult('public-spend',  false);
-  setKeyResult('public-view',   false);
-  setKeyResult('private-view',  false);
-
-  i('btn').style.display = 'block';
-  i('wallet-title').style.display = 'none';
-}
-
-function toggle(id) {
-  var el = i(id);
-  el.style.display = el.style.display == 'block' ? 'none' : 'block';
-}
-
-function updateOnline() {
-  document.getElementById('online-alert').style.display = navigator.onLine ? 'block' : 'none';
-}
-
-function init() {
-  window.addEventListener('online', updateOnline);
-  window.addEventListener('offline', updateOnline);
-  updateOnline();
-
-  if(location.hash.length > 3) {
-    var check = document.querySelector('input[name="coin"][value="' + location.hash.replace(/\W/g, '') + '"]');
-    if(check) check.checked = true;
-  }
-}
-init();
-var mw =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -456,7 +97,7 @@ if (typeof Object.create === 'function') {
 /***/ (function(module, exports, __webpack_require__) {
 
 /* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(5)
+var buffer = __webpack_require__(7)
 var Buffer = buffer.Buffer
 
 // alternative to using Object.keys for old browsers
@@ -3980,7 +3621,7 @@ elliptic.eddsa = __webpack_require__(63);
 "use strict";
 
 
-var assert = __webpack_require__(6);
+var assert = __webpack_require__(5);
 var inherits = __webpack_require__(0);
 
 exports.inherits = inherits;
@@ -4235,6 +3876,153 @@ exports.shr64_lo = shr64_lo;
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+module.exports = assert;
+
+function assert(val, msg) {
+  if (!val)
+    throw new Error(msg || 'Assertion failed');
+}
+
+assert.equal = function assertEqual(l, r, msg) {
+  if (l != r)
+    throw new Error(msg || ('Assertion failed: ' + l + ' != ' + r));
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// a duplex stream is just a stream that is both readable and writable.
+// Since JS doesn't have multiple prototypal inheritance, this class
+// prototypally inherits from Readable, and then parasitically from
+// Writable.
+
+
+
+/*<replacement>*/
+
+var processNextTick = __webpack_require__(14);
+/*</replacement>*/
+
+/*<replacement>*/
+var objectKeys = Object.keys || function (obj) {
+  var keys = [];
+  for (var key in obj) {
+    keys.push(key);
+  }return keys;
+};
+/*</replacement>*/
+
+module.exports = Duplex;
+
+/*<replacement>*/
+var util = __webpack_require__(12);
+util.inherits = __webpack_require__(0);
+/*</replacement>*/
+
+var Readable = __webpack_require__(29);
+var Writable = __webpack_require__(19);
+
+util.inherits(Duplex, Readable);
+
+var keys = objectKeys(Writable.prototype);
+for (var v = 0; v < keys.length; v++) {
+  var method = keys[v];
+  if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
+}
+
+function Duplex(options) {
+  if (!(this instanceof Duplex)) return new Duplex(options);
+
+  Readable.call(this, options);
+  Writable.call(this, options);
+
+  if (options && options.readable === false) this.readable = false;
+
+  if (options && options.writable === false) this.writable = false;
+
+  this.allowHalfOpen = true;
+  if (options && options.allowHalfOpen === false) this.allowHalfOpen = false;
+
+  this.once('end', onend);
+}
+
+// the no-half-open enforcer
+function onend() {
+  // if we allow half-open state, or if the writable side ended,
+  // then we're ok.
+  if (this.allowHalfOpen || this._writableState.ended) return;
+
+  // no more data can be written.
+  // But allow more writes to happen in this tick.
+  processNextTick(onEndNT, this);
+}
+
+function onEndNT(self) {
+  self.end();
+}
+
+Object.defineProperty(Duplex.prototype, 'destroyed', {
+  get: function () {
+    if (this._readableState === undefined || this._writableState === undefined) {
+      return false;
+    }
+    return this._readableState.destroyed && this._writableState.destroyed;
+  },
+  set: function (value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (this._readableState === undefined || this._writableState === undefined) {
+      return;
+    }
+
+    // backward compatibility, the user is explicitly
+    // managing destroyed
+    this._readableState.destroyed = value;
+    this._writableState.destroyed = value;
+  }
+});
+
+Duplex.prototype._destroy = function (err, cb) {
+  this.push(null);
+  this.end();
+
+  processNextTick(cb, err);
+};
+
+function forEach(xs, f) {
+  for (var i = 0, l = xs.length; i < l; i++) {
+    f(xs[i], i);
+  }
+}
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6031,153 +5819,6 @@ function isnan (val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = assert;
-
-function assert(val, msg) {
-  if (!val)
-    throw new Error(msg || 'Assertion failed');
-}
-
-assert.equal = function assertEqual(l, r, msg) {
-  if (l != r)
-    throw new Error(msg || ('Assertion failed: ' + l + ' != ' + r));
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// a duplex stream is just a stream that is both readable and writable.
-// Since JS doesn't have multiple prototypal inheritance, this class
-// prototypally inherits from Readable, and then parasitically from
-// Writable.
-
-
-
-/*<replacement>*/
-
-var processNextTick = __webpack_require__(14);
-/*</replacement>*/
-
-/*<replacement>*/
-var objectKeys = Object.keys || function (obj) {
-  var keys = [];
-  for (var key in obj) {
-    keys.push(key);
-  }return keys;
-};
-/*</replacement>*/
-
-module.exports = Duplex;
-
-/*<replacement>*/
-var util = __webpack_require__(12);
-util.inherits = __webpack_require__(0);
-/*</replacement>*/
-
-var Readable = __webpack_require__(29);
-var Writable = __webpack_require__(19);
-
-util.inherits(Duplex, Readable);
-
-var keys = objectKeys(Writable.prototype);
-for (var v = 0; v < keys.length; v++) {
-  var method = keys[v];
-  if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
-}
-
-function Duplex(options) {
-  if (!(this instanceof Duplex)) return new Duplex(options);
-
-  Readable.call(this, options);
-  Writable.call(this, options);
-
-  if (options && options.readable === false) this.readable = false;
-
-  if (options && options.writable === false) this.writable = false;
-
-  this.allowHalfOpen = true;
-  if (options && options.allowHalfOpen === false) this.allowHalfOpen = false;
-
-  this.once('end', onend);
-}
-
-// the no-half-open enforcer
-function onend() {
-  // if we allow half-open state, or if the writable side ended,
-  // then we're ok.
-  if (this.allowHalfOpen || this._writableState.ended) return;
-
-  // no more data can be written.
-  // But allow more writes to happen in this tick.
-  processNextTick(onEndNT, this);
-}
-
-function onEndNT(self) {
-  self.end();
-}
-
-Object.defineProperty(Duplex.prototype, 'destroyed', {
-  get: function () {
-    if (this._readableState === undefined || this._writableState === undefined) {
-      return false;
-    }
-    return this._readableState.destroyed && this._writableState.destroyed;
-  },
-  set: function (value) {
-    // we ignore the value if the stream
-    // has not been initialized yet
-    if (this._readableState === undefined || this._writableState === undefined) {
-      return;
-    }
-
-    // backward compatibility, the user is explicitly
-    // managing destroyed
-    this._readableState.destroyed = value;
-    this._writableState.destroyed = value;
-  }
-});
-
-Duplex.prototype._destroy = function (err, cb) {
-  this.push(null);
-  this.end();
-
-  processNextTick(cb, err);
-};
-
-function forEach(xs, f) {
-  for (var i = 0, l = xs.length; i < l; i++) {
-    f(xs[i], i);
-  }
-}
-
-/***/ }),
 /* 8 */
 /***/ (function(module, exports) {
 
@@ -6489,7 +6130,7 @@ module.exports = Hash
 
 
 var utils = __webpack_require__(4);
-var assert = __webpack_require__(6);
+var assert = __webpack_require__(5);
 
 function BlockHash() {
   this.pending = null;
@@ -6692,7 +6333,7 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
 /***/ }),
 /* 13 */
@@ -7230,7 +6871,7 @@ exports = module.exports = __webpack_require__(29);
 exports.Stream = exports;
 exports.Readable = exports;
 exports.Writable = __webpack_require__(19);
-exports.Duplex = __webpack_require__(7);
+exports.Duplex = __webpack_require__(6);
 exports.Transform = __webpack_require__(34);
 exports.PassThrough = __webpack_require__(75);
 
@@ -7338,7 +6979,7 @@ util.inherits(Writable, Stream);
 function nop() {}
 
 function WritableState(options, stream) {
-  Duplex = Duplex || __webpack_require__(7);
+  Duplex = Duplex || __webpack_require__(6);
 
   options = options || {};
 
@@ -7478,7 +7119,7 @@ if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.protot
 }
 
 function Writable(options) {
-  Duplex = Duplex || __webpack_require__(7);
+  Duplex = Duplex || __webpack_require__(6);
 
   // Writable ctor is applied to Duplexes, too.
   // `realHasInstance` is necessary because using plain `instanceof`
@@ -8048,7 +7689,7 @@ exports.g1_256 = g1_256;
 var utils = __webpack_require__(4);
 var common = __webpack_require__(11);
 var shaCommon = __webpack_require__(22);
-var assert = __webpack_require__(6);
+var assert = __webpack_require__(5);
 
 var sum32 = utils.sum32;
 var sum32_4 = utils.sum32_4;
@@ -8159,7 +7800,7 @@ SHA256.prototype._digest = function digest(enc) {
 
 var utils = __webpack_require__(4);
 var common = __webpack_require__(11);
-var assert = __webpack_require__(6);
+var assert = __webpack_require__(5);
 
 var rotr64_hi = utils.rotr64_hi;
 var rotr64_lo = utils.rotr64_lo;
@@ -8932,7 +8573,7 @@ function fn5 (a, b, c, d, e, m, k, s) {
 
 module.exports = RIPEMD160
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
 /***/ }),
 /* 29 */
@@ -9042,7 +8683,7 @@ function prependListener(emitter, event, fn) {
 }
 
 function ReadableState(options, stream) {
-  Duplex = Duplex || __webpack_require__(7);
+  Duplex = Duplex || __webpack_require__(6);
 
   options = options || {};
 
@@ -9110,7 +8751,7 @@ function ReadableState(options, stream) {
 }
 
 function Readable(options) {
-  Duplex = Duplex || __webpack_require__(7);
+  Duplex = Duplex || __webpack_require__(6);
 
   if (!(this instanceof Readable)) return new Readable(options);
 
@@ -10096,228 +9737,279 @@ exports.clearImmediate = clearImmediate;
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var Buffer = __webpack_require__(5).Buffer;
-
-var isBufferEncoding = Buffer.isEncoding
-  || function(encoding) {
-       switch (encoding && encoding.toLowerCase()) {
-         case 'hex': case 'utf8': case 'utf-8': case 'ascii': case 'binary': case 'base64': case 'ucs2': case 'ucs-2': case 'utf16le': case 'utf-16le': case 'raw': return true;
-         default: return false;
-       }
-     }
+"use strict";
 
 
-function assertEncoding(encoding) {
-  if (encoding && !isBufferEncoding(encoding)) {
-    throw new Error('Unknown encoding: ' + encoding);
+var Buffer = __webpack_require__(1).Buffer;
+
+var isEncoding = Buffer.isEncoding || function (encoding) {
+  encoding = '' + encoding;
+  switch (encoding && encoding.toLowerCase()) {
+    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+      return true;
+    default:
+      return false;
   }
+};
+
+function _normalizeEncoding(enc) {
+  if (!enc) return 'utf8';
+  var retried;
+  while (true) {
+    switch (enc) {
+      case 'utf8':
+      case 'utf-8':
+        return 'utf8';
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return 'utf16le';
+      case 'latin1':
+      case 'binary':
+        return 'latin1';
+      case 'base64':
+      case 'ascii':
+      case 'hex':
+        return enc;
+      default:
+        if (retried) return; // undefined
+        enc = ('' + enc).toLowerCase();
+        retried = true;
+    }
+  }
+};
+
+// Do not cache `Buffer.isEncoding` when checking encoding names as some
+// modules monkey-patch it to support additional encodings
+function normalizeEncoding(enc) {
+  var nenc = _normalizeEncoding(enc);
+  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  return nenc || enc;
 }
 
 // StringDecoder provides an interface for efficiently splitting a series of
 // buffers into a series of JS strings without breaking apart multi-byte
-// characters. CESU-8 is handled as part of the UTF-8 encoding.
-//
-// @TODO Handling all encodings inside a single object makes it very difficult
-// to reason about this code, so it should be split up in the future.
-// @TODO There should be a utf8-strict encoding that rejects invalid UTF-8 code
-// points as used by CESU-8.
-var StringDecoder = exports.StringDecoder = function(encoding) {
-  this.encoding = (encoding || 'utf8').toLowerCase().replace(/[-_]/, '');
-  assertEncoding(encoding);
+// characters.
+exports.StringDecoder = StringDecoder;
+function StringDecoder(encoding) {
+  this.encoding = normalizeEncoding(encoding);
+  var nb;
   switch (this.encoding) {
-    case 'utf8':
-      // CESU-8 represents each of Surrogate Pair by 3-bytes
-      this.surrogateSize = 3;
-      break;
-    case 'ucs2':
     case 'utf16le':
-      // UTF-16 represents each of Surrogate Pair by 2-bytes
-      this.surrogateSize = 2;
-      this.detectIncompleteChar = utf16DetectIncompleteChar;
+      this.text = utf16Text;
+      this.end = utf16End;
+      nb = 4;
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
       break;
     case 'base64':
-      // Base-64 stores 3 bytes in 4 chars, and pads the remainder.
-      this.surrogateSize = 3;
-      this.detectIncompleteChar = base64DetectIncompleteChar;
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
       break;
     default:
-      this.write = passThroughWrite;
+      this.write = simpleWrite;
+      this.end = simpleEnd;
       return;
   }
-
-  // Enough space to store all bytes of a single character. UTF-8 needs 4
-  // bytes, but CESU-8 may require up to 6 (3 bytes per surrogate).
-  this.charBuffer = new Buffer(6);
-  // Number of bytes received for the current incomplete multi-byte character.
-  this.charReceived = 0;
-  // Number of bytes expected for the current incomplete multi-byte character.
-  this.charLength = 0;
-};
-
-
-// write decodes the given buffer and returns it as JS string that is
-// guaranteed to not contain any partial multi-byte characters. Any partial
-// character found at the end of the buffer is buffered up, and will be
-// returned when calling write again with the remaining bytes.
-//
-// Note: Converting a Buffer containing an orphan surrogate to a String
-// currently works, but converting a String to a Buffer (via `new Buffer`, or
-// Buffer#write) will replace incomplete surrogates with the unicode
-// replacement character. See https://codereview.chromium.org/121173009/ .
-StringDecoder.prototype.write = function(buffer) {
-  var charStr = '';
-  // if our last write ended with an incomplete multibyte character
-  while (this.charLength) {
-    // determine how many remaining bytes this buffer has to offer for this char
-    var available = (buffer.length >= this.charLength - this.charReceived) ?
-        this.charLength - this.charReceived :
-        buffer.length;
-
-    // add the new bytes to the char buffer
-    buffer.copy(this.charBuffer, this.charReceived, 0, available);
-    this.charReceived += available;
-
-    if (this.charReceived < this.charLength) {
-      // still not enough chars in this buffer? wait for more ...
-      return '';
-    }
-
-    // remove bytes belonging to the current character from the buffer
-    buffer = buffer.slice(available, buffer.length);
-
-    // get the character that was split
-    charStr = this.charBuffer.slice(0, this.charLength).toString(this.encoding);
-
-    // CESU-8: lead surrogate (D800-DBFF) is also the incomplete character
-    var charCode = charStr.charCodeAt(charStr.length - 1);
-    if (charCode >= 0xD800 && charCode <= 0xDBFF) {
-      this.charLength += this.surrogateSize;
-      charStr = '';
-      continue;
-    }
-    this.charReceived = this.charLength = 0;
-
-    // if there are no more bytes in this buffer, just emit our char
-    if (buffer.length === 0) {
-      return charStr;
-    }
-    break;
-  }
-
-  // determine and set charLength / charReceived
-  this.detectIncompleteChar(buffer);
-
-  var end = buffer.length;
-  if (this.charLength) {
-    // buffer the incomplete character bytes we got
-    buffer.copy(this.charBuffer, 0, buffer.length - this.charReceived, end);
-    end -= this.charReceived;
-  }
-
-  charStr += buffer.toString(this.encoding, 0, end);
-
-  var end = charStr.length - 1;
-  var charCode = charStr.charCodeAt(end);
-  // CESU-8: lead surrogate (D800-DBFF) is also the incomplete character
-  if (charCode >= 0xD800 && charCode <= 0xDBFF) {
-    var size = this.surrogateSize;
-    this.charLength += size;
-    this.charReceived += size;
-    this.charBuffer.copy(this.charBuffer, size, 0, size);
-    buffer.copy(this.charBuffer, 0, 0, size);
-    return charStr.substring(0, end);
-  }
-
-  // or just emit the charStr
-  return charStr;
-};
-
-// detectIncompleteChar determines if there is an incomplete UTF-8 character at
-// the end of the given buffer. If so, it sets this.charLength to the byte
-// length that character, and sets this.charReceived to the number of bytes
-// that are available for this character.
-StringDecoder.prototype.detectIncompleteChar = function(buffer) {
-  // determine how many bytes we have to check at the end of this buffer
-  var i = (buffer.length >= 3) ? 3 : buffer.length;
-
-  // Figure out if one of the last i bytes of our buffer announces an
-  // incomplete char.
-  for (; i > 0; i--) {
-    var c = buffer[buffer.length - i];
-
-    // See http://en.wikipedia.org/wiki/UTF-8#Description
-
-    // 110XXXXX
-    if (i == 1 && c >> 5 == 0x06) {
-      this.charLength = 2;
-      break;
-    }
-
-    // 1110XXXX
-    if (i <= 2 && c >> 4 == 0x0E) {
-      this.charLength = 3;
-      break;
-    }
-
-    // 11110XXX
-    if (i <= 3 && c >> 3 == 0x1E) {
-      this.charLength = 4;
-      break;
-    }
-  }
-  this.charReceived = i;
-};
-
-StringDecoder.prototype.end = function(buffer) {
-  var res = '';
-  if (buffer && buffer.length)
-    res = this.write(buffer);
-
-  if (this.charReceived) {
-    var cr = this.charReceived;
-    var buf = this.charBuffer;
-    var enc = this.encoding;
-    res += buf.slice(0, cr).toString(enc);
-  }
-
-  return res;
-};
-
-function passThroughWrite(buffer) {
-  return buffer.toString(this.encoding);
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
 }
 
-function utf16DetectIncompleteChar(buffer) {
-  this.charReceived = buffer.length % 2;
-  this.charLength = this.charReceived ? 2 : 0;
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return -1;
 }
 
-function base64DetectIncompleteChar(buffer) {
-  this.charReceived = buffer.length % 3;
-  this.charLength = this.charReceived ? 3 : 0;
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
 }
 
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// UTF-8 replacement characters ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd'.repeat(p);
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd'.repeat(p + 1);
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd'.repeat(p + 2);
+      }
+    }
+  }
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character for each buffered byte of a (partial)
+// character needs to be added to the output.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd'.repeat(this.lastTotal - this.lastNeed);
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
+      }
+    }
+    return r;
+  }
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+function base64Text(buf, i) {
+  var n = (buf.length - i) % 3;
+  if (n === 0) return buf.toString('base64', i);
+  this.lastNeed = 3 - n;
+  this.lastTotal = 3;
+  if (n === 1) {
+    this.lastChar[0] = buf[buf.length - 1];
+  } else {
+    this.lastChar[0] = buf[buf.length - 2];
+    this.lastChar[1] = buf[buf.length - 1];
+  }
+  return buf.toString('base64', i, buf.length - n);
+}
+
+function base64End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
+  return r;
+}
+
+// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
+function simpleWrite(buf) {
+  return buf.toString(this.encoding);
+}
+
+function simpleEnd(buf) {
+  return buf && buf.length ? this.write(buf) : '';
+}
 
 /***/ }),
 /* 34 */
@@ -10391,7 +10083,7 @@ function base64DetectIncompleteChar(buffer) {
 
 module.exports = Transform;
 
-var Duplex = __webpack_require__(7);
+var Duplex = __webpack_require__(6);
 
 /*<replacement>*/
 var util = __webpack_require__(12);
@@ -10976,155 +10668,78 @@ var EdDSA = __webpack_require__(2).eddsa;
 var pbkdf2 = __webpack_require__(66);
 var scrypt = __webpack_require__(84);
 var bs58 = __webpack_require__(85);
-var shajs = __webpack_require__(35)
+var shajs = __webpack_require__(35);
 var Ripemd160 = __webpack_require__(28);
 var keccak = __webpack_require__(87);
 var BN = __webpack_require__(3);
+var argon2 = __webpack_require__(93);
 
-var s256 = new EC('secp256k1');
-var ed25519 = new EdDSA('ed25519');
+onmessage = function(e) {
+  console.log(e.data);
+  var data = e.data;
+  var password = data.pass;
+  var salt = data.salt;
+  var hashSuffix = data.hashSuffix;
 
-function sha256(s) {
-  return shajs('sha256').update(s).digest();
-}
-
-function ripemd160(s) {
-  return (new Ripemd160()).update(s).digest();
-}
-
-function keccak256(s) {
-  return keccak('keccak256').update(s).digest();
-}
-function keccak256(s) {
-  return keccak('keccak256').update(s).digest();
-}
-
-function reduce32(s) {
-  return (new BN(s, 'le').mod(new BN('1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed', 16))).toArrayLike(Buffer, 'le', 32);
-}
-
-function b58checkencode(version, buffer) {
-  buffer = Buffer.concat([Buffer.alloc(1, version), buffer])
-  var hash = sha256(sha256(buffer));
-  buffer = Buffer.concat([buffer, hash.slice(0, 4)]);
-  var encoded = bs58.encode(buffer);
-  return encoded;
-}
-
-function keyToBitcoinish(key, version) {
-  var pubkey = new Buffer(s256.keyFromPrivate(key).getPublic(false, 'hex'), 'hex');
-  return {
-    private: b58checkencode(version + 0x80, key),
-    public: b58checkencode(version, ripemd160(sha256(pubkey))),
-  };
-}
-
-function keyToBitcoin(key) {
-  return keyToBitcoinish(key, 0);
-}
-
-function keyToLitecoin(key) {
-  return keyToBitcoinish(key, 48);
-}
-
-function keyToEthereum(key) {
-  var pubkey = new Buffer(s256.keyFromPrivate(key).getPublic(false, 'hex'), 'hex');
-  return {
-    private: key.toString('hex'),
-    public: '0x' + keccak256(pubkey.slice(1)).slice(12).toString('hex')
-  };
-}
-
-function keyToMonero(seed) {
-  var private_spend = reduce32(seed);
-  var private_view = reduce32(keccak256(private_spend));
-
-  // Hack
-  var kp = ed25519.keyFromSecret()
-  kp._privBytes = Array.from(private_spend);
-  var public_spend = new Buffer(kp.pubBytes());
-  var kp = ed25519.keyFromSecret()
-  kp._privBytes = Array.from(private_view);
-  var public_view = new Buffer(kp.pubBytes());
-
-
-  var address_buf = Buffer.concat([Buffer.alloc(1, 0x12), public_spend, public_view])
-  address_buf = Buffer.concat([address_buf, keccak256(address_buf).slice(0,4)]);
-  var address = ''
-  for (var i = 0; i < 8; i++) {
-    address += bs58.encode(address_buf.slice(i*8, i*8+8));
-  }
-  address += bs58.encode(address_buf.slice(64, 69));
-
-  return {
-    private_spend: private_spend.toString('hex'),
-    private_view: private_view.toString('hex'),
-    public_spend: public_spend.toString('hex'),
-    public_view: public_view.toString('hex'),
-    public: address
-  }
-}
-
-
-
-function warpwallet(password, salt, power, hashSuffix, callback) {
-  var password_buffer = Buffer.from(password, 'utf-8');
-  var salt_buffer = Buffer.from(salt, 'utf-8');
+  var password_buffer = Buffer.from(password, "utf-8");
+  var salt_buffer = Buffer.from(salt, "utf-8");
   var x1 = Buffer.alloc(1, hashSuffix);
   var x2 = Buffer.alloc(1, hashSuffix + 1);
 
-  scrypt(Buffer.concat([password_buffer, x1]), Buffer.concat([salt_buffer, x1]), Math.pow(2, power), 8, 1, 32, function(error, progress, key1) {
-    if(key1) {
-      pbkdf2.pbkdf2(Buffer.concat([password_buffer, x2]), Buffer.concat([salt_buffer, x2]), Math.pow(2, 16), 32, 'sha256', function(err, key2) {
-        for (var i = 0; i < 32; i++) {
-          key2[i] = key2[i] ^ key1[i];
+  console.log("yes worker", argon2.ArgonType.Argon2i);
+
+  argon2
+    .hash({
+      // required
+      pass: password,
+      salt: salt,
+      // optional
+      time: 262144, // the number of iterations
+      mem: 8, // used memory, in KiB
+      hashLen: 32, // desired hash length
+      parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
+      type: argon2.ArgonType.Argon2i, // or argon2.ArgonType.Argon2i
+      distPath: "" // asm.js script location, without trailing slash
+    })
+    .then(res => {
+      postMessage({ status: 0.9, data: null });
+      console.log(res.hash); // hash as Uint8Array
+      console.log(res.hashHex); // hash as hex-string
+      console.log(res.encoded); // encoded hash, as required by argon2
+      var key1 = res.hash;
+      pbkdf2.pbkdf2(
+        Buffer.concat([password_buffer, x2]),
+        Buffer.concat([salt_buffer, x2]),
+        Math.pow(2, 16),
+        32,
+        "sha256",
+        function(err, key2) {
+          for (var i = 0; i < 32; i++) {
+            key2[i] = key2[i] ^ key1[i];
+          }
+          console.log("key2", key2, "key2 tostring hex", key2.toString("hex"));
+          var objData = {
+            status: 1,
+            hashSuffix: hashSuffix,
+            strkey: key2.toString("hex"),
+            bufferkey: key2
+          };
+          //postMessage({status: 1, data: key2.toString('hex'), hashSuffix: hashSuffix}, key2)
+          console.log("type of ", typeof objData.bufferkey);
+          postMessage(objData);
         }
-        //console.log(key2.toString('hex'));
-        callback(1, key2);
-      });
-    }
-    callback(progress, null);
-  });
-}
-
-var currencies = {
-  bitcoin: {
-    fn: keyToBitcoin,
-    hashSuffix: 1,
-  },
-  litecoin: {
-    fn: keyToLitecoin,
-    hashSuffix: 2,
-  },
-  monero: {
-    fn: keyToMonero,
-    hashSuffix: 3,
-  },
-  ethereum: {
-    fn: keyToEthereum,
-    hashSuffix: 4
-  }
-}
-
-function generateWallet(passphrase, salt, currency, callback) {
-  warpwallet(passphrase, salt, 18, currencies[currency].hashSuffix, function(progress, result) {
-    if(result) {
-      var wallet = currencies[currency].fn(result);
-      callback(1, wallet)
-    } else {
-      callback(progress, null);
-    }
-  });
-}
-
-module.exports = {
-  generateWallet: generateWallet
+      );
+    })
+    // or error
+    .catch(err => {
+      console.log(err.message); // error message as string, if available
+      console.log(err.code); // numeric error code
+    });
 };
+/*
+            */
 
-//warpwallet('hello', 'a@b.c', 10);
-//warpwallet('hello', 'a@b.c', 18);
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
 /***/ }),
 /* 39 */
@@ -11341,7 +10956,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 /* 41 */
 /***/ (function(module, exports) {
 
-module.exports = {"_args":[[{"raw":"elliptic","scope":null,"escapedName":"elliptic","name":"elliptic","rawSpec":"","spec":"latest","type":"tag"},"/home/david/dev/warpwallet-ethereum"]],"_from":"elliptic@latest","_id":"elliptic@6.4.0","_inCache":true,"_location":"/elliptic","_nodeVersion":"7.0.0","_npmOperationalInternal":{"host":"packages-18-east.internal.npmjs.com","tmp":"tmp/elliptic-6.4.0.tgz_1487798866428_0.30510620190761983"},"_npmUser":{"name":"indutny","email":"fedor@indutny.com"},"_npmVersion":"3.10.8","_phantomChildren":{},"_requested":{"raw":"elliptic","scope":null,"escapedName":"elliptic","name":"elliptic","rawSpec":"","spec":"latest","type":"tag"},"_requiredBy":["#USER","/"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz","_shasum":"cac9af8762c85836187003c8dfe193e5e2eae5df","_shrinkwrap":null,"_spec":"elliptic","_where":"/home/david/dev/warpwallet-ethereum","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"directories":{},"dist":{"shasum":"cac9af8762c85836187003c8dfe193e5e2eae5df","tarball":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz"},"files":["lib"],"gitHead":"6b0d2b76caae91471649c8e21f0b1d3ba0f96090","homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","maintainers":[{"name":"indutny","email":"fedor@indutny.com"}],"name":"elliptic","optionalDependencies":{},"readme":"ERROR: No README data found!","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.0"}
+module.exports = {"name":"elliptic","version":"6.4.0","description":"EC cryptography","main":"lib/elliptic.js","files":["lib"],"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","unit":"istanbul test _mocha --reporter=spec test/index.js","test":"npm run lint && npm run unit","version":"grunt dist && git add dist/"},"repository":{"type":"git","url":"git@github.com:indutny/elliptic"},"keywords":["EC","Elliptic","curve","Cryptography"],"author":"Fedor Indutny <fedor@indutny.com>","license":"MIT","bugs":{"url":"https://github.com/indutny/elliptic/issues"},"homepage":"https://github.com/indutny/elliptic","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"}}
 
 /***/ }),
 /* 42 */
@@ -11352,7 +10967,7 @@ module.exports = {"_args":[[{"raw":"elliptic","scope":null,"escapedName":"ellipt
 
 var utils = exports;
 var BN = __webpack_require__(3);
-var minAssert = __webpack_require__(6);
+var minAssert = __webpack_require__(5);
 var minUtils = __webpack_require__(21);
 
 utils.assert = minAssert;
@@ -14082,7 +13697,7 @@ var sh = [
 
 
 var utils = __webpack_require__(4);
-var assert = __webpack_require__(6);
+var assert = __webpack_require__(5);
 
 function Hmac(hash, key, enc) {
   if (!(this instanceof Hmac))
@@ -15170,7 +14785,7 @@ EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
 
 var hash = __webpack_require__(15);
 var utils = __webpack_require__(21);
-var assert = __webpack_require__(6);
+var assert = __webpack_require__(5);
 
 function HmacDRBG(options) {
   if (!(this instanceof HmacDRBG))
@@ -16159,7 +15774,7 @@ module.exports = function hash (buf, fn) {
   return buf
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
 /***/ }),
 /* 70 */
@@ -16250,7 +15865,7 @@ HashBase.prototype._digest = function () {
 
 module.exports = HashBase
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
 /***/ }),
 /* 71 */
@@ -16669,7 +16284,7 @@ module.exports = __webpack_require__(19);
 /* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(7);
+module.exports = __webpack_require__(6);
 
 
 /***/ }),
@@ -17530,7 +17145,7 @@ module.exports = function base (ALPHABET) {
     var string = ''
 
     // deal with leading zeros
-    for (var k = 0; source[k] === 0 && k < source.length - 1; ++k) string += ALPHABET[0]
+    for (var k = 0; source[k] === 0 && k < source.length - 1; ++k) string += LEADER
     // convert digits to a string
     for (var q = digits.length - 1; q >= 0; --q) string += ALPHABET[digits[q]]
 
@@ -17538,6 +17153,7 @@ module.exports = function base (ALPHABET) {
   }
 
   function decodeUnsafe (string) {
+    if (typeof string !== 'string') throw new TypeError('Expected String')
     if (string.length === 0) return Buffer.allocUnsafe(0)
 
     var bytes = [0]
@@ -18068,8 +17684,138 @@ exports.p1600 = function (s) {
 }
 
 
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+            return (root.argon2 = factory());
+        }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {
+        root.argon2 = factory();
+    }
+}(this, function () {
+    'use strict';
+
+    /**
+     * @enum
+     */
+    var ArgonType = {
+        Argon2d: 0,
+        Argon2i: 1
+    };
+
+    var scriptLoadedPromise;
+
+    function loadScript(src) {
+        return new Promise(function(resolve, reject) {
+            if (typeof importScripts === 'function') {
+                importScripts(src);
+                resolve();
+            } else {
+                var el = document.createElement("script");
+                el.src = src;
+                el.onload = function() { resolve(); };
+                el.onerror = function() { reject('Error loading script'); };
+                document.body.appendChild(el);
+            }
+        });
+    }
+
+    function allocateArray(strOrArr) {
+        var arr = strOrArr instanceof Uint8Array || strOrArr instanceof Array ? strOrArr
+            : Module.intArrayFromString(strOrArr);
+        return Module.allocate(arr, 'i8', Module.ALLOC_NORMAL);
+    }
+
+    /**
+     * Argon2 hash
+     * @param {string} params.pass - password string
+     * @param {string} params.salt - salt string
+     * @param {number} [params.time=1] - the number of iterations
+     * @param {number} [params.mem=1024] - used memory, in KiB
+     * @param {number} [params.hashLen=24] - desired hash length
+     * @param {number} [params.parallelism=1] - desired parallelism (will be computed in parallel only for PNaCl)
+     * @param {number} [params.type=argon2.ArgonType.Argon2d] - hash type: argon2.ArgonType.Argon2d or argon2.ArgonType.Argon2i
+     * @param {number} [params.distPath=.] - asm.js script location, without trailing slash
+     *
+     * @return Promise
+     *
+     * @example
+     *  argon2.hash({ pass: 'password', salt: 'somesalt' })
+     *      .then(h => console.log(h.hash, h.hashHex, h.encoded))
+     *      .catch(e => console.error(e.message, e.code))
+     */
+    function argon2Hash(params) {
+        if (!scriptLoadedPromise) {
+            var distPath = params.distPath || '/bower_components/argon2-browser/docs/dist';
+            scriptLoadedPromise = loadScript(distPath + '/argon2-asm.min.js');
+        }
+        return scriptLoadedPromise.then(function() {
+            var tCost = params.time || 1;
+            var mCost = params.mem || 1024;
+            var parallelism = params.parallelism || 1;
+            var pwd = allocateArray(params.pass);
+            var pwdlen = params.pass.length;
+            var salt = allocateArray(params.salt);
+            var saltlen = params.salt.length;
+            var hash = Module.allocate(new Array(params.hashLen || 24), 'i8', Module.ALLOC_NORMAL);
+            var hashlen = params.hashLen || 24;
+            var encoded = Module.allocate(new Array(512), 'i8', Module.ALLOC_NORMAL);
+            var encodedlen = 512;
+            var argon2Type = params.type || argon2.ArgonType.Argon2d;
+            var version = 0x13;
+            var err;
+            try {
+                var res = Module._argon2_hash(tCost, mCost, parallelism, pwd, pwdlen, salt, saltlen,
+                    hash, hashlen, encoded, encodedlen, argon2Type, version);
+            } catch (e) {
+                err = e;
+            }
+            var result;
+            if (res === 0 && !err) {
+                var hashStr = '';
+                var hashArr = new Uint8Array(hashlen);
+                for (var i = 0; i < hashlen; i++) {
+                    var byte = Module.HEAP8[hash + i];
+                    hashArr[i] = byte;
+                    hashStr += ('0' + (0xFF & byte).toString(16)).slice(-2);
+                }
+                var encodedStr = Module.Pointer_stringify(encoded);
+                result = { hash: hashArr, hashHex: hashStr, encoded: encodedStr };
+            } else {
+                try {
+                    if (!err) {
+                        err = Module.Pointer_stringify(Module._argon2_error_message(res))
+                    }
+                } catch (e) {
+                }
+                result = { message: err, code: res };
+            }
+            try {
+                Module._free(pwd);
+                Module._free(salt);
+                Module._free(hash);
+                Module._free(encoded);
+            } catch (e) { }
+            if (err) {
+                throw result;
+            } else {
+                return result;
+            }
+        });
+    }
+
+    return {
+        ArgonType: ArgonType,
+        hash: argon2Hash
+    };
+}));
+
+
+
 /***/ })
-/******/ ]);</script>
-  </div>
-</body>
-</html>
+/******/ ]);

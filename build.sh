@@ -13,7 +13,7 @@ csplit index_template.html /INLINE_SCRIPT_HERE/
 } > out.html
 
 rm xx00 xx01
-name=memwallet_${VERSION}_SHA256_$(sha256sum out.html  | cut -d' ' -f1).html
+name=mindwallet_${VERSION}_SHA256_$(sha256sum out.html  | cut -d' ' -f1).html
 mv out.html $name
 
 sed "s/REDIR_PAGE/$name/" redir_template.html > index.html

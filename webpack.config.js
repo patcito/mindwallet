@@ -7,6 +7,14 @@ module.exports = {
       'process.env.NODE_ENV': '"production"'
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      }
+    ]
+  },
   output: {
     filename: 'dist/bundle.js',
     libraryTarget: 'var',

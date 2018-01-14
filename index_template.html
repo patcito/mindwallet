@@ -1,8 +1,7 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MemWallet - deterministic bitcoin wallet generator for Ethereum, Monero, Litecoin and Bitcoin</title>
+  <title>MindWallet - deterministic bitcoin wallet generator for Ethereum, Monero, Litecoin and Bitcoin</title>
   <style>
     body {
       font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -149,14 +148,26 @@
     .brand {
       font-size: 1.1em;
     }
+      @media (min-width: 992px){
+    .lead {
+          width: 50%;
+              margin: auto;
+      }
+    }
   </style>
 
 </head>
 <body>
   <div class="header">
-    <h1>MemWallet</h1>
-    <h2>Like WrapWallet but for Altcoins</h2>
-    <h3>No external assets, to use offline just save this page</h3>
+    <h1>MindWallet</h1>
+    <div class=lead>
+    <h2>Have your mind on your wallet and your wallet on your mind.</h2>
+    <h4 id="lead">MindWallet allows you to store your bitcoin wallet's private key in your mind easily and securely, 
+        the only way to lose your wallet would be to either lose your mind or if <a href="https://xkcd.com/538/" target=_blank>someone spends $5 on a bench</a> but this ones applies to other  wallets.</h2>
+    <h4>MindWallet is heavily based on the great <a href="https://dvdbng.github.io/memwallet">MemWallet</a> project itself inspired by <a href="https://keybase.io/warp/">WarpWallet</a> whose authors are of keybase.io and okcupid fame.</h2>
+    <h4>MindWallet makes use of the argon2 hash function to generate your private keys, argon2 is harder to hack than scrypt which is also pretty secure.</h2>
+    <h4>No external assets, to use offline just save this page</h3>
+    </div>
   </div>
   <div class="content">
 
@@ -175,19 +186,20 @@
       </div>
     </div>
     <div class="form-group">
-      <div class="form-label">Salt: (optional) <a href="#" onclick="toggle('info')">[?]</a></div>
+      <div class="form-label">Email: (optional) <a href="#" onclick="toggle('info')">[?]</a></div>
       <div class="form-field">
         <input type="text" id="salt" oninput="resetState();" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       </div>
     </div>
     <div class="info" id="info" style="display: none">
-      <span class="brand">MemWallet</span> can use a salt to make your wallet stronger. Use, for example, your e-mail or phone number.
+      <span class="brand">MindWallet</span> can use a salt to make your wallet stronger. Use, for example, your e-mail or phone number.
+      This forces bruteforce attackers to target only one user per hash (unless other users use the same email). 
       If you're unsure, please do it. <a href="#" onclick="toggle('info')">[Close]</a>
     </div>
 
 
     <div id="progress" style="display: none">
-      <center>Running scrypt...</center>
+      <center>Running argon2... This may take up to 1 or 2 minutes. Use the Golang version for a faster version.</center>
       <div class="progress">
         <div id="progress-bar" class="progress-bar" style="width: 50%"> </div>
       </div>
@@ -225,27 +237,42 @@
   </form>
 
   <p id="online-alert" class="alert"><strong>You are online.</strong> For maximum security is better that you save this page and generate the address in a computer disconnected from the internet.</p>
-  <p id="js-alert" class="alert">Javascript is disabled. <span class="brand">MemWallet</span> needs javascript to work </p>
+  <p id="js-alert" class="alert">Javascript is disabled. <span class="brand">MindWallet</span> needs javascript to work </p>
   <script> document.getElementById('js-alert').style.display = 'none'; </script>
 
   <p>
-    <span class="brand">MemWallet</span> is a deterministic cryptocurrency address generator, like <a href="https://keybase.io/warp/">WrapWallet</a>, but it works for Ethereum, Litecoin, Monero and Bitcoin.
+  <span class="brand">MindWallet</span> is a deterministic cryptocurrency address generator, it is a fork of <a href="https://dvdbng.github.io/memwallet">MemWallet</a> which itself is inspired by
+  <a href="https://keybase.io/warp/">WarpWallet</a>, but it uses the Argon2 hashing function instead of scrypt.
     You never have to save or store your private key anywhere. Just pick a really good password - many random words, for example - and never use it for anything else.
   </p>
 
-  <p>Given the same Passphrase and Salt, <span class="brand">MemWallet</span> will always generate the same address and private key, so if you only need to remember your password to access your funds.</p>
+  <p>Given the same Passphrase and Salt, <span class="brand">MindWallet</span> will always generate the same address and private key, so you only need to remember your password to access your funds.</p>
 
   <p>
-      For more information on why this is safer than a regular brainwallet, see <a href="https://keybase.io/warp/">WrapWallet</a>'s help,
-      <span class="brand">MemWallet</span> is a re-implementation of WarpWallet, but it works for other currencies.
-      WarpWallet and <span class="brand">MemWallet</span> use the same algorithm, so WarpWallet and <span class="brand">MemWallet</span> will generate
-      the same Bitcoin address for a given Passphrase and salt.
+      For more information on why this is safer than a regular brainwallet, see <a href="https://keybase.io/warp/">WarpWallet</a>'s help,
+      <span class="brand">MindWallet</span> uses MemWallet's re-implementation of WarpWallet, but with a different hash function algorithm.
+      MemWallet and <span class="brand">MindWallet</span> use the same algorithm, so MemWallet and <span class="brand">MindWallet</span> will generate
+      the same Bitcoin address for a given Passphrase and salt. However, because MindWallet uses a different algorithm, it will generate a different Bitcoin address.
+      MindWallet comes with a golang implementation largely based on MemWallet so you can double check that the JS version works, it is also much faster to run.
+      Have Fun!
   </p>
 
-  The algorithm behind <span class="brand">MemWallet</span>:
+    <p>
+    Why a different algorithm? While scrypt is still pretty secure, there are 
+    <a href="https://blog.ircmaxell.com/2014/03/why-i-dont-recommend-scrypt.html"
+       target=_blank>known issues</a> a
+   <a href="https://password-hashing.net/" target=_blank>
+       password hashing competition</a> was held to fix these known issues and the declared winner was 
+   <a href="https://github.com/p-h-c/phc-winner-argon2" target=_blank>argon2</a> which has been out for more than 4 years now and 
+   has been implemented in most languages including the <a href="https://github.com/golang/crypto/blob/master/argon2/argon2.go">golang standard crypto library</a> 
+   used here. The JS version used  here is the C version compiled to asm.js and wasm.js thanks to <a href="https://github.com/antelle/argon2-browser"
+       target=_blank>@antelle</a>.
+    </p>
+
+  The algorithm behind <span class="brand">MindWallet</span>:
   <table class="table table-condensed" style="font-size: 0.7em; font-family: mono;">
     <tr><td valign="top" align="right">b</td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">1 for Bitcoin, 2 for Litecoin, 3 for Ethereum and 4 for Monero</td></tr>
-    <tr><td valign="top" align="right">seed<sub>1</sub></td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">scrypt(key=(passphrase||b), salt=(salt||b), N=2<sup>18</sup>, r=8, p=1, dkLen=32)</td></tr>
+    <tr><td valign="top" align="right">seed<sub>1</sub></td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">argon2(key=(passphrase||b), salt=(salt||b), N=2<sup>18</sup>, r=8, p=1, dkLen=32)</td></tr>
     <tr><td valign="top" align="right">seed<sub>2</sub></td><td align="center" valign="top">=</td><td valign="top" align="left">pbkdf2(key=(passphrase||(b+1)), salt=(salt||(b+1)), c=2<sup>16</sup>, dkLen=32, prf=SHA256)</td></tr>
     <tr><td valign="top" align="right">wallet</td><td align="center" valign="top">=</td><td valign="top" align="left">generate_wallet(seed=(seed<sub>1</sub> ⊕ seed<sub>2</sub>))</td></tr>
   </table>
@@ -254,9 +281,10 @@
   <hr/>
   <p>&nbsp;</p>
   <center>
-    <p><span class="brand">MemWallet</span> Was made with ♥ By <a href="https://github.com/dvdbng">David Bengoa</a></p>
+    <p><span class="brand">MindWallet</span> was made with ♥ By <a href="https://github.com/patcito">Patrick Aljord</a> shamelessly re-using awesome code by 
+    <a href="https://github.com/dvdbng">David Bengoa</a></p>
 
-    <p>Source code is in <a href="https://github.com/dvdbng/memwallet">Github</a>, and so is a go implementation of the same algorithm.</p>
+    <p>Source code is in <a href="https://github.com/patcito/mindwallet">Github</a>, and so is a go implementation of the same algorithm.</p>
   </center>
   <p>&nbsp;</p>
 
