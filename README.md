@@ -15,11 +15,12 @@ Here is a implementation of MemWallet in JavaScript and Go
 
 $ python -m SimpleHTTPServer
 
-Then open your browser to http://localhost:8000
+Then open your browser and go to http://localhost:8000
 
-### Instruction to run the go executable:
+### Instructions to run the go executable:
 
-First install golang
+First [install golang](https://golang.org/dl/).
+
 Second install go dep:
 
 On Mac:
