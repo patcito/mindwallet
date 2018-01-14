@@ -43,9 +43,10 @@ function i(id){
 
 function updateButton(){
   var passphrase = i('passphrase').value;
+  var salt = i('salt').value;
   var button = i('btn');
   resetState();
-  if(passphrase.length == 0) {
+  if(passphrase.length == 0 || salt.length <=7) {
     button.disabled = true;
     button.textContent = 'Generate';
   } else if (passphrase.length < 12) {
@@ -58,7 +59,10 @@ function updateButton(){
 }
 
 function resetState(){
-  setKeyResult('public',        false);
+  if(passphrase.length == 0) {
+    button.disabled = true;
+    button.textContent = 'Generate';
+  }   setKeyResult('public',        false);
   setKeyResult('private',       false);
   setKeyResult('private-spend', false);
   setKeyResult('public-spend',  false);

@@ -82,7 +82,7 @@
       overflow: hidden;
     }
 
-    input[type="text"], input[type="password"] {
+    input[type="email"], input[type="text"], input[type="password"] {
       color:#464a4c;
       border-radius:4px;
       width: 300px;
@@ -186,15 +186,15 @@
       </div>
     </div>
     <div class="form-group">
-      <div class="form-label">Email: (optional) <a href="#" onclick="toggle('info')">[?]</a></div>
+      <div class="form-label">Email: <a href="#" onclick="toggle('info')">[?]</a></div>
       <div class="form-field">
-        <input type="text" id="salt" oninput="resetState();" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <input type="email" id="salt" placeholder="use at least 8 character" required minlength="8" oninput="updateButton();" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       </div>
     </div>
     <div class="info" id="info" style="display: none">
-      <span class="brand">MindWallet</span> can use a salt to make your wallet stronger. Use, for example, your e-mail or phone number.
-      This forces bruteforce attackers to target only one user per hash (unless other users use the same email). 
-      If you're unsure, please do it. <a href="#" onclick="toggle('info')">[Close]</a>
+      <span class="brand">MindWallet</span> can use your email as salt to make your wallet stronger.
+      This forces bruteforce attackers to target only one user per hash (unless other users use the same email).
+      <a href="#" onclick="toggle('info')">[Close]</a>
     </div>
 
 
@@ -338,9 +338,10 @@ function i(id){
 
 function updateButton(){
   var passphrase = i('passphrase').value;
+  var salt = i('salt').value;
   var button = i('btn');
   resetState();
-  if(passphrase.length == 0) {
+  if(passphrase.length == 0 || salt.length <=7) {
     button.disabled = true;
     button.textContent = 'Generate';
   } else if (passphrase.length < 12) {
@@ -353,7 +354,10 @@ function updateButton(){
 }
 
 function resetState(){
-  setKeyResult('public',        false);
+  if(passphrase.length == 0) {
+    button.disabled = true;
+    button.textContent = 'Generate';
+  }   setKeyResult('public',        false);
   setKeyResult('private',       false);
   setKeyResult('private-spend', false);
   setKeyResult('public-spend',  false);
