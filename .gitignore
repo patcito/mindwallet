@@ -2,8 +2,7 @@ node_modules
 dist
 .tmp
 .sass-cache
-src/bower_components
-bower_components
+bower_components/
 .DS_Store
 dist/
 node_modules/

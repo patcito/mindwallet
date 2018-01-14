@@ -1,3 +1,390 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MindWallet - deterministic bitcoin wallet generator for Ethereum, Monero, Litecoin and Bitcoin</title>
+  <style>
+    body {
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      font-size: 17px;
+    }
+    p {
+      line-height: 24px;
+    }
+    .content {
+      max-width: 800px;
+      width: 800px;
+      margin: 0 auto;
+    }
+
+    .form {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+
+    .alert {
+      background-color: #f2dede;
+      border-radius: 4px;
+      border: solid 0.75px #ebcccc;
+      color: #a94442;
+      padding: 12px 20px;
+    }
+    .info {
+      background-color: #d9edf7;
+      color: #31708f;
+      border-radius: 4px;
+      border: solid 0.75px #bcdff1;
+      padding: 12px 20px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 
+    }
+    h1 {
+      font-size: 40px;
+      letter-spacing: 2px;
+      margin: 20px 0;
+    }
+    .header {
+      margin: 0 0 50px 0;
+      text-align: center;
+      background-color: #222;
+      color: #fff;
+      padding: 20px;
+    }
+    .header h2 {
+      margin: 0 0 10px 0;
+      font-size: 20px;
+    }
+    .header h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .form-label {
+      width: 300px;
+      float: left;
+      text-align: right;
+      padding-right: 10px;
+    }
+    .form-field {
+      width: 400px;
+      float: left;
+    }
+    .form-group {
+      padding-bottom: 15px;
+      overflow: hidden;
+    }
+    .form {
+      overflow: hidden;
+    }
+
+    input[type="text"], input[type="password"] {
+      color:#464a4c;
+      border-radius:4px;
+      width: 300px;
+      border: .75px solid #0003;
+      margin:0;
+      padding:8px 12px
+    }
+    input:focus {
+      border-color: #5cb3fd;
+    }
+    .currency-selector {
+      text-align: center;
+        margin-bottom: 20px;
+    }
+    a {
+      text-decoration: none;
+      color: #0275d8;
+    }
+    a:hover {
+      background-color: #ccc;
+    }
+
+    .progress {
+      display: flex;
+      overflow: hidden;
+      font-size: .75rem;
+      line-height: 1rem;
+      text-align: center;
+      background-color: #eceeef;
+      border-radius: 4px;
+    }
+    .progress-bar {
+      height: 1rem;
+      background-color: #0275d8;
+      background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+      background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+      background-image: linear-gradient(45deg,#fff3 25%,transparent 25%,transparent 50%,#fff3 50%,#fff3 75%,transparent 75%,transparent);
+      -webkit-background-size: 1rem 1rem;
+      background-size: 1rem 1rem;
+    }
+    .btn {
+      color: #fff;
+      background-color: #0275d8;
+      border-color: #0275d8;
+      display: block;
+      font-weight: 400;
+      line-height: 1.25;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid transparent;
+      padding: .5rem 1rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      margin: 10px auto;
+      cursor: pointer;
+    }
+    .btn:disabled {
+      background-color: #0275d8;
+      border-color: #0275d8;
+      cursor: not-allowed;
+      opacity: .65;
+    }
+    .brand {
+      font-size: 1.1em;
+    }
+      @media (min-width: 992px){
+    .lead {
+          width: 50%;
+              margin: auto;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="header">
+    <h1>MindWallet</h1>
+    <div class=lead>
+    <h2>Have your mind on your wallet and your wallet on your mind.</h2>
+    <h4 id="lead">MindWallet allows you to store your bitcoin wallet's private key in your mind easily and securely, 
+        the only way to lose your wallet would be to either lose your mind or if <a href="https://xkcd.com/538/" target=_blank>someone spends $5 on a bench to hurt you</a> but this one applies to other wallets as well.</h2>
+    <h4>MindWallet is heavily based on the great <a href="https://dvdbng.github.io/memwallet">MemWallet</a> project itself inspired by <a href="https://keybase.io/warp/">WarpWallet</a> whose authors are of keybase.io and okcupid fame.</h2>
+    <h4>MindWallet makes use of the argon2 hash function to generate your private keys, argon2 is harder to hack than scrypt which is also pretty secure.</h2>
+    <h4>No external assets, to use offline just save this page</h3>
+    </div>
+  </div>
+  <div class="content">
+
+  <form class="form" autocomplete="off" onsubmit="return false;">
+    <div class="form-group currency-selector">
+      <label> <input name="coin" onclick="resetState()" checked value="bitcoin" type="radio"/> Bitcoin </label>
+      <label> <input name="coin" onclick="resetState()" value="ethereum" type="radio"/> Ethereum </label>
+      <label> <input name="coin" onclick="resetState()" value="litecoin" type="radio"/> Litecoin </label>
+      <label> <input name="coin" onclick="resetState()" value="monero" type="radio"/> Monero </label>
+
+    </div>
+    <div class="form-group">
+      <div class="form-label">Passphrase </div>
+      <div class="form-field">
+        <input type="password" id="passphrase" oninput="updateButton()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Email: (optional) <a href="#" onclick="toggle('info')">[?]</a></div>
+      <div class="form-field">
+        <input type="text" id="salt" oninput="resetState();" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      </div>
+    </div>
+    <div class="info" id="info" style="display: none">
+      <span class="brand">MindWallet</span> can use a salt to make your wallet stronger. Use, for example, your e-mail or phone number.
+      This forces bruteforce attackers to target only one user per hash (unless other users use the same email). 
+      If you're unsure, please do it. <a href="#" onclick="toggle('info')">[Close]</a>
+    </div>
+
+
+    <div id="progress" style="display: none">
+      <center>Running argon2... This may take up to 1 or 2 minutes. Use the Golang version for a faster version.</center>
+      <div class="progress">
+        <div id="progress-bar" class="progress-bar" style="width: 50%"> </div>
+      </div>
+    </div>
+
+    <button id="btn" class="btn" disabled="" onclick="generate()">Generate</button>
+
+
+    <h2 style="display: none" id="wallet-title"></h2>
+    <div class="form-group" id="cnt-public" style="display: none">
+      <div class="form-label" id="label-public" ></div>
+      <div class="form-field"><input type="text" id="result-public" /></div>
+    </div>
+    <div class="form-group" id="cnt-private" style="display: none">
+      <div class="form-label" id="label-private"></div>
+      <div class="form-field"><input type="text" id="result-private" /></div>
+    </div>
+
+    <div class="form-group" id="cnt-public-view" style="display: none">
+      <div class="form-label" id="label-public-view" ></div>
+      <div class="form-field"><input type="text" id="result-public-view" /></div>
+    </div>
+    <div class="form-group" id="cnt-private-view" style="display: none">
+      <div class="form-label" id="label-private-view" ></div>
+      <div class="form-field"><input type="text" id="result-private-view" /></div>
+    </div>
+    <div class="form-group" id="cnt-public-spend" style="display: none">
+      <div class="form-label" id="label-public-spend" ></div>
+      <div class="form-field"><input type="text" id="result-public-spend" /></div>
+    </div>
+    <div class="form-group" id="cnt-private-spend" style="display: none">
+      <div class="form-label" id="label-private-spend" ></div>
+      <div class="form-field"><input type="text" id="result-private-spend" /></div>
+    </div>
+  </form>
+
+  <p id="online-alert" class="alert"><strong>You are online.</strong> For maximum security is better that you save this page and generate the address in a computer disconnected from the internet.</p>
+  <p id="js-alert" class="alert">Javascript is disabled. <span class="brand">MindWallet</span> needs javascript to work </p>
+  <script> document.getElementById('js-alert').style.display = 'none'; </script>
+
+  <p>
+  <span class="brand">MindWallet</span> is a deterministic cryptocurrency address generator, it is a fork of <a href="https://dvdbng.github.io/memwallet">MemWallet</a> which itself is inspired by
+  <a href="https://keybase.io/warp/">WarpWallet</a>, but it uses the Argon2 hashing function instead of scrypt.
+    You never have to save or store your private key anywhere. Just pick a really good password - many random words, for example - and never use it for anything else.
+  </p>
+
+  <p>Given the same Passphrase and Salt, <span class="brand">MindWallet</span> will always generate the same address and private key, so you only need to remember your password to access your funds.</p>
+
+  <p>
+      For more information on why this is safer than a regular brainwallet, see <a href="https://keybase.io/warp/">WarpWallet</a>'s help,
+      <span class="brand">MindWallet</span> uses MemWallet's re-implementation of WarpWallet, but with a different hash function algorithm.
+      MemWallet and <span class="brand">MindWallet</span> use the same algorithm, so MemWallet and <span class="brand">MindWallet</span> will generate
+      the same Bitcoin address for a given Passphrase and salt. However, because MindWallet uses a different algorithm, it will generate a different Bitcoin address.
+      MindWallet comes with a golang implementation largely based on MemWallet so you can double check that the JS version works, it is also much faster to run.
+      Have Fun!
+  </p>
+
+    <p>
+    Why a different algorithm? While scrypt is still pretty secure, there are 
+    <a href="https://blog.ircmaxell.com/2014/03/why-i-dont-recommend-scrypt.html"
+       target=_blank>known issues</a> a
+   <a href="https://password-hashing.net/" target=_blank>
+       password hashing competition</a> was held to fix these known issues and the declared winner was 
+   <a href="https://github.com/p-h-c/phc-winner-argon2" target=_blank>argon2</a> which has been out for more than 4 years now and 
+   has been implemented in most languages including the <a href="https://github.com/golang/crypto/blob/master/argon2/argon2.go">golang standard crypto library</a> 
+   used here. The JS version used  here is the C version compiled to asm.js and wasm.js thanks to <a href="https://github.com/antelle/argon2-browser"
+       target=_blank>@antelle</a>.
+    </p>
+
+  The algorithm behind <span class="brand">MindWallet</span>:
+  <table class="table table-condensed" style="font-size: 0.7em; font-family: mono;">
+    <tr><td valign="top" align="right">b</td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">1 for Bitcoin, 2 for Litecoin, 3 for Ethereum and 4 for Monero</td></tr>
+    <tr><td valign="top" align="right">seed<sub>1</sub></td><td align="center" valign="top" width="20">=</td><td valign="top" align="left">argon2(key=(passphrase||b), salt=(salt||b), N=2<sup>18</sup>, r=8, p=1, dkLen=32)</td></tr>
+    <tr><td valign="top" align="right">seed<sub>2</sub></td><td align="center" valign="top">=</td><td valign="top" align="left">pbkdf2(key=(passphrase||(b+1)), salt=(salt||(b+1)), c=2<sup>16</sup>, dkLen=32, prf=SHA256)</td></tr>
+    <tr><td valign="top" align="right">wallet</td><td align="center" valign="top">=</td><td valign="top" align="left">generate_wallet(seed=(seed<sub>1</sub> ⊕ seed<sub>2</sub>))</td></tr>
+  </table>
+
+  <p>&nbsp;</p>
+  <hr/>
+  <p>&nbsp;</p>
+  <center>
+    <p><span class="brand">MindWallet</span> was made with ♥ By <a href="https://github.com/patcito">Patrick Aljord</a> shamelessly re-using awesome code by 
+    <a href="https://github.com/dvdbng">David Bengoa</a></p>
+
+    <p>Source code is in <a href="https://github.com/patcito/mindwallet">Github</a>, and so is a go implementation of the same algorithm.</p>
+  </center>
+  <p>&nbsp;</p>
+
+
+  <!--
+    Javascript is left un-minimized so it's easy to audit it offline
+  -->
+<script>
+function setKeyResult(name, show, label, value){
+  i('cnt-' + name).style.display = show ? 'block' : 'none';
+  i('label-' + name).textContent = show ? label : '';
+  i('result-' + name).value = show ? value : '';
+}
+
+function titleCase(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function generate() {
+  var passphrase = document.getElementById('passphrase').value;
+  var salt = document.getElementById('salt').value;
+  var currency = document.querySelector('[name=coin]:checked').value;
+  var progress_blk = i('progress');
+  var progress_bar = i('progress-bar');
+
+  for(var el of document.querySelectorAll('.form input')) el.disabled = true;
+  i('btn').style.display = 'none';
+
+  mw.generateWallet(passphrase, salt, currency, function(progress, result) {
+    progress_blk.style.display = !result ? 'block' : 'none';
+    progress_bar.style.width = progress*100 + '%';
+    if(result){
+      for(var el of document.querySelectorAll('.form input')) el.disabled = false;
+      i('wallet-title').style.display = 'block';
+      i('wallet-title').textContent = 'Your ' + titleCase(currency) + ' wallet',
+
+      setKeyResult('public', true, 'Public ' + titleCase(currency) + ' address', result.public);
+      setKeyResult('private', currency != 'monero', 'Private key', result.private);
+
+      setKeyResult('private-spend', currency == 'monero', 'Private Spend key', result.private_spend);
+      setKeyResult('public-spend',  currency == 'monero', 'Public Spend key', result.public_spend);
+      setKeyResult('public-view',   currency == 'monero', 'Public View key', result.public_view);
+      setKeyResult('private-view',  currency == 'monero', 'Private View key', result.private_view);
+    }
+  });
+}
+
+function i(id){
+  return document.getElementById(id);
+}
+
+function updateButton(){
+  var passphrase = i('passphrase').value;
+  var button = i('btn');
+  resetState();
+  if(passphrase.length == 0) {
+    button.disabled = true;
+    button.textContent = 'Generate';
+  } else if (passphrase.length < 12) {
+    button.disabled = false;
+    button.textContent = 'Consider a larger passpharase';
+  } else {
+    button.disabled = false;
+    button.textContent = 'Generate';
+  }
+}
+
+function resetState(){
+  setKeyResult('public',        false);
+  setKeyResult('private',       false);
+  setKeyResult('private-spend', false);
+  setKeyResult('public-spend',  false);
+  setKeyResult('public-view',   false);
+  setKeyResult('private-view',  false);
+
+  i('btn').style.display = 'block';
+  i('wallet-title').style.display = 'none';
+}
+
+function toggle(id) {
+  var el = i(id);
+  el.style.display = el.style.display == 'block' ? 'none' : 'block';
+}
+
+function updateOnline() {
+  document.getElementById('online-alert').style.display = navigator.onLine ? 'block' : 'none';
+}
+
+function init() {
+  window.addEventListener('online', updateOnline);
+  window.addEventListener('offline', updateOnline);
+  updateOnline();
+
+  if(location.hash.length > 3) {
+    var check = document.querySelector('input[name="coin"][value="' + location.hash.replace(/\W/g, '') + '"]');
+    if(check) check.checked = true;
+  }
+}
+init();
+var mw =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -10673,71 +11060,300 @@ var Ripemd160 = __webpack_require__(28);
 var keccak = __webpack_require__(87);
 var BN = __webpack_require__(3);
 var argon2 = __webpack_require__(93);
+var Worker = __webpack_require__(94);
 
-onmessage = function(e) {
-  console.log(e.data);
-  var data = e.data;
-  var password = data.pass;
-  var salt = data.salt;
-  var hashSuffix = data.hashSuffix;
+var s256 = new EC("secp256k1");
+var ed25519 = new EdDSA("ed25519");
 
+function sha256(s) {
+  return shajs("sha256")
+    .update(s)
+    .digest();
+}
+
+function ripemd160(s) {
+  return new Ripemd160().update(s).digest();
+}
+
+function keccak256(s) {
+  return keccak("keccak256")
+    .update(s)
+    .digest();
+}
+function keccak256(s) {
+  return keccak("keccak256")
+    .update(s)
+    .digest();
+}
+
+function reduce32(s) {
+  return new BN(s, "le")
+    .mod(
+      new BN(
+        "1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed",
+        16
+      )
+    )
+    .toArrayLike(Buffer, "le", 32);
+}
+
+function b58checkencode(version, unbufferedKey) {
+  var buffer = Buffer.from(unbufferedKey);
+  buffer = Buffer.concat([Buffer.alloc(1, version), buffer]);
+  var hash = sha256(sha256(buffer));
+  buffer = Buffer.concat([buffer, hash.slice(0, 4)]);
+  var encoded = bs58.encode(buffer);
+  return encoded;
+}
+
+function keyToBitcoinish(key, version) {
+  var pubkey = new Buffer(
+    s256.keyFromPrivate(key).getPublic(false, "hex"),
+    "hex"
+  );
+  return {
+    private: b58checkencode(version + 0x80, key),
+    public: b58checkencode(version, ripemd160(sha256(pubkey)))
+  };
+}
+
+function keyToBitcoin(key) {
+  return keyToBitcoinish(key, 0);
+}
+
+function keyToLitecoin(key) {
+  return keyToBitcoinish(key, 48);
+}
+
+function keyToEthereum(key) {
+  var pubkey = new Buffer(
+    s256.keyFromPrivate(key).getPublic(false, "hex"),
+    "hex"
+  );
+  return {
+    private: key.toString("hex"),
+    public:
+      "0x" +
+      keccak256(pubkey.slice(1))
+        .slice(12)
+        .toString("hex")
+  };
+}
+
+function keyToMonero(seed) {
+  var private_spend = reduce32(seed);
+  var private_view = reduce32(keccak256(private_spend));
+
+  // Hack
+  var kp = ed25519.keyFromSecret();
+  kp._privBytes = Array.from(private_spend);
+  var public_spend = new Buffer(kp.pubBytes());
+  var kp = ed25519.keyFromSecret();
+  kp._privBytes = Array.from(private_view);
+  var public_view = new Buffer(kp.pubBytes());
+
+  var address_buf = Buffer.concat([
+    Buffer.alloc(1, 0x12),
+    public_spend,
+    public_view
+  ]);
+  address_buf = Buffer.concat([
+    address_buf,
+    keccak256(address_buf).slice(0, 4)
+  ]);
+  var address = "";
+  for (var i = 0; i < 8; i++) {
+    address += bs58.encode(address_buf.slice(i * 8, i * 8 + 8));
+  }
+  address += bs58.encode(address_buf.slice(64, 69));
+
+  return {
+    private_spend: private_spend.toString("hex"),
+    private_view: private_view.toString("hex"),
+    public_spend: public_spend.toString("hex"),
+    public_view: public_view.toString("hex"),
+    public: address
+  };
+}
+/*
+argon2.hash({
+    // required
+    pass: 'password',
+    salt: 'salt',
+    // optional
+    time: 1, // the number of iterations
+    mem: 1024, // used memory, in KiB
+    hashLen: 24, // desired hash length
+    parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
+    type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i
+    distPath: '' // asm.js script location, without trailing slash
+})
+// result
+.then(res => {
+    console.log(res.hash) // hash as Uint8Array
+    console.log(res.hashHex) // hash as hex-string
+    console.log(res.encoded) // encoded hash, as required by argon2
+})
+// or error
+.catch(err => {
+    console.log(err.message) // error message as string, if available
+    console.log(err.code) // numeric error code
+})
+*/
+function allocateArray(strOrArr) {
+  var arr =
+    strOrArr instanceof Uint8Array || strOrArr instanceof Array
+      ? strOrArr
+      : intArrayFromString(strOrArr);
+  return allocate(arr, "i8", ALLOC_NORMAL);
+}
+/*	salt		The salt to use, at least 8 characters
+	-i		Use Argon2i (this is the default)
+	-d		Use Argon2d instead of Argon2i
+	-id		Use Argon2id instead of Argon2i
+	-t N		Sets the number of iterations to N (default = 3)
+	-m N		Sets the memory usage of 2^N KiB (default 12)
+	-k N		Sets the memory usage of N KiB (default 4096)
+	-p N		Sets parallelism to N threads (default 1)
+	-l N		Sets hash output length to N bytes (default 32)
+	-e		Output only encoded hash
+	-r		Output only the raw bytes of the hash
+	-v (10|13)	Argon2 version (defaults to the most recent version, currently 13)
+	-h		Print ./argon2 usage
+
+v*/
+
+function now() {
+  return performance ? performance.now() : Date.now();
+}
+function warpwallet(password, salt, power, hashSuffix, callback) {
+  /*var arg = {};
+    var t_cost = arg && arg.time || 10;
+    var m_cost = arg && arg.mem || 4096;
+    var parallelism = arg && arg.parallelism || 1;
+    var pwd = allocateArray(arg && arg.pass || 'password');
+    var pwdlen = arg && arg.pass ? arg.pass.length : 8;
+    var salt = allocateArray(arg && arg.salt || 'somesalt');
+    var saltlen = arg && arg.salt ? arg.salt.length : 8;
+    var hash = allocate(new Array(arg && arg.hashLen || 32), 'i8', ALLOC_NORMAL);
+    var hashlen = arg && arg.hashLen || 32;
+    var encoded = allocate(new Array(512), 'i8', ALLOC_NORMAL);
+    var encodedlen = 512;
+    var argon2_type = arg && arg.type || 0;
+    var version = 0x13;
+*/
   var password_buffer = Buffer.from(password, "utf-8");
   var salt_buffer = Buffer.from(salt, "utf-8");
   var x1 = Buffer.alloc(1, hashSuffix);
   var x2 = Buffer.alloc(1, hashSuffix + 1);
 
-  console.log("yes worker", argon2.ArgonType.Argon2i);
+  var workerData = {
+    pass: password,
+    salt: salt,
+    hashSuffix: hashSuffix
+  };
+  const worker = new Worker();
 
-  argon2
-    .hash({
-      // required
-      pass: password,
-      salt: salt,
-      // optional
-      time: 262144, // the number of iterations
-      mem: 8, // used memory, in KiB
-      hashLen: 32, // desired hash length
-      parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
-      type: argon2.ArgonType.Argon2i, // or argon2.ArgonType.Argon2i
-      distPath: "" // asm.js script location, without trailing slash
-    })
-    .then(res => {
-      postMessage({ status: 0.9, data: null });
-      console.log(res.hash); // hash as Uint8Array
-      console.log(res.hashHex); // hash as hex-string
-      console.log(res.encoded); // encoded hash, as required by argon2
-      var key1 = res.hash;
-      pbkdf2.pbkdf2(
-        Buffer.concat([password_buffer, x2]),
-        Buffer.concat([salt_buffer, x2]),
-        Math.pow(2, 16),
-        32,
-        "sha256",
-        function(err, key2) {
-          for (var i = 0; i < 32; i++) {
-            key2[i] = key2[i] ^ key1[i];
-          }
-          console.log("key2", key2, "key2 tostring hex", key2.toString("hex"));
-          var objData = {
-            status: 1,
-            hashSuffix: hashSuffix,
-            strkey: key2.toString("hex"),
-            bufferkey: key2
-          };
-          //postMessage({status: 1, data: key2.toString('hex'), hashSuffix: hashSuffix}, key2)
-          console.log("type of ", typeof objData.bufferkey);
-          postMessage(objData);
-        }
-      );
-    })
-    // or error
-    .catch(err => {
-      console.log(err.message); // error message as string, if available
-      console.log(err.code); // numeric error code
-    });
+  worker.postMessage(workerData);
+  worker.onmessage = function(event) {
+    console.log(event.data);
+
+    if (event.data.hashSuffix != 4) {
+      callback(event.data.status, event.data.bufferkey);
+    } else {
+      callback(event.data.status, event.data.strkey);
+    }
+  };
+  //,,,
+  console.log("no worker", argon2.ArgonType.Argon2i);
+  callback(0.1, null);
+  //cheating a bit here to show some progress and not make the user leave in dispair
+  setTimeout(function() {
+    callback(0.2, null);
+  }, 5000);
+  setTimeout(function() {
+    callback(0.4, null);
+  }, 15000);
+  setTimeout(function() {
+    callback(0.6, null);
+  }, 30000);
+  setTimeout(function() {
+    callback(0.7, null);
+  }, 35000);
+  /*        argon2.hash({
+            // required
+            pass: password,
+            salt: salt,
+            // optional
+            time: 262144, // the number of iterations
+            mem: 8, // used memory, in KiB
+            hashLen: 32, // desired hash length
+            parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
+            type: argon2.ArgonType.Argon2i, // or argon2.ArgonType.Argon2i
+            distPath: '' // asm.js script location, without trailing slash
+        })
+        // result
+            .then(res => {
+                callback(0.3, null);
+                console.log(res.hash) // hash as Uint8Array
+                console.log(res.hashHex) // hash as hex-string
+                console.log(res.encoded) // encoded hash, as required by argon2
+                var key1 = res.hash;
+                pbkdf2.pbkdf2(Buffer.concat([password_buffer, x2]), Buffer.concat([salt_buffer, x2]), Math.pow(2, 16), 32, 'sha256', function(err, key2) {
+                    for (var i = 0; i < 32; i++) {
+                        key2[i] = key2[i] ^ key1[i];
+                    }
+                    //console.log(key2.toString('hex'));
+                    callback(1, key2);
+                });
+            })
+        // or error
+            .catch(err => {
+                console.log(err.message) // error message as string, if available
+                console.log(err.code) // numeric error code
+            })*/
+  //callback(progress, null);
+}
+
+var currencies = {
+  bitcoin: {
+    fn: keyToBitcoin,
+    hashSuffix: 1
+  },
+  litecoin: {
+    fn: keyToLitecoin,
+    hashSuffix: 2
+  },
+  monero: {
+    fn: keyToMonero,
+    hashSuffix: 3
+  },
+  ethereum: {
+    fn: keyToEthereum,
+    hashSuffix: 4
+  }
 };
-/*
-            */
+
+function generateWallet(passphrase, salt, currency, callback) {
+  warpwallet(passphrase, salt, 18, currencies[currency].hashSuffix, function(
+    progress,
+    result
+  ) {
+    if (result) {
+      var wallet = currencies[currency].fn(result);
+      callback(1, wallet);
+    } else {
+      callback(progress, null);
+    }
+  });
+}
+
+module.exports = {
+  generateWallet: generateWallet
+};
+
+//warpwallet('hello', 'a@b.c', 10);
+//warpwallet('hello', 'a@b.c', 18);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
@@ -17817,5 +18433,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root,
 
 
 
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = function() {
+  return new Worker(__webpack_require__.p + "dce57f58709e69af7b75.worker.js");
+};
+
 /***/ })
-/******/ ]);
+/******/ ]);</script>
+  </div>
+</body>
+</html>

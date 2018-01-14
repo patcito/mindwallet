@@ -34,7 +34,7 @@ onmessage = function(e) {
       hashLen: 32, // desired hash length
       parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
       type: argon2.ArgonType.Argon2i, // or argon2.ArgonType.Argon2i
-      distPath: "" // asm.js script location, without trailing slash
+      distPath: "./" // asm.js script location, without trailing slash
     })
     .then(res => {
       postMessage({ status: 0.9, data: null });
