@@ -9,7 +9,7 @@ For more information on why this is safer than a regular brainwallet, see [WarpW
 
 Another difference between MindWallet and MemWallet is that MindWallet makes use of a web worker to make it faster, this forces you to make use of a web server.
 
-Here is a implementation of MemWallet in JavaScript and Go
+This repo containst an implementation of MindWallet in JavaScript and Go.
 
 ### Instructions to run the html:
 
@@ -43,7 +43,7 @@ Run it like that:
 
 $ ./mindwallet bitcoin my_password my_salt
 
-You can use add more memory cost at the end by adding one the following options: strong, very_strong or ridiculously_strong. These can take minutes
-to execute but as this is something you won't be re-uinsg a log, it may not be a big deal.
+You can add more memory cost at the end by adding one the following options: strong, very_strong or ridiculously_strong. These can take minutes
+to execute but as this is something you won't be re-uinsg a lot, it may not be a big deal.
 
 Have fun!
