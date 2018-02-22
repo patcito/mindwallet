@@ -16,7 +16,7 @@ import (
 )
 
 func usage() {
-	fmt.Printf("Usage: %s [bitcoin|monero|litecoin|ethereum] [Passphrase] [Salt] [normal (default)|strong|super|ridiculously_strong]\n\n", os.Args[0])
+	fmt.Printf("Usage: %s [bitcoin|monero|litecoin|ethereum] [Passphrase] [Salt] [normal (default)|strong|super_strong|ridiculously_strong]\n\n", os.Args[0])
 	fmt.Printf("Example: ./mindwallet ethereum MyPassword MyPassphrase %s \n\n")
 	os.Exit(1)
 }
