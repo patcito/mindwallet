@@ -2,18 +2,23 @@
 
 
 [[projects]]
-  branch = "master"
+  digest = "1:ac365b32cde028b5b9b0625a02aa9feb5d4e56c7be8491b59fe61a3be3576211"
   name = "github.com/btcsuite/btcd"
   packages = ["btcec"]
-  revision = "2e60448ffcc6bf78332d1fe590260095f554dd78"
+  pruneopts = ""
+  revision = "56cc42fe07c206e76812fc57a216b59c41189f04"
+  version = "v0.21.0-beta"
 
 [[projects]]
   branch = "master"
+  digest = "1:1aba35800a45268f57d62c274ccab799ddf16ea05fd32bab2382c16ea59c0028"
   name = "github.com/btcsuite/btcutil"
   packages = ["base58"]
-  revision = "501929d3d046174c3d39f0ea54ece471aa17238c"
+  pruneopts = ""
+  revision = "063c4115b3a9a7201e82447875383890698abcb6"
 
 [[projects]]
+  digest = "1:b017beadf04debc7a3e626b9606b8c935145803d6073c2db8267088d467abde2"
   name = "github.com/ethereum/go-ethereum"
   packages = [
     "common",
@@ -21,47 +26,72 @@
     "common/math",
     "crypto",
     "crypto/secp256k1",
-    "crypto/sha3",
-    "rlp"
+    "rlp",
   ]
-  revision = "4bb3c89d44e372e6a9ab85a8be0c9345265c763a"
-  version = "v1.7.3"
+  pruneopts = ""
+  revision = "c71a7e26a8b1e332bbf3262d88ba3ff32071456c"
+  version = "v1.9.22"
 
 [[projects]]
   branch = "master"
+  digest = "1:678eb8275bb8e3394737d136f55da106956c699fb4ccc3e72aa115123cd28d0d"
   name = "github.com/golang/crypto"
   packages = ["argon2"]
-  revision = "95a4943f35d008beabde8c11e5075a1b714e6419"
+  pruneopts = ""
+  revision = "5c72a883971a4325f8c62bf07b6d38c20ea47a6a"
 
 [[projects]]
   branch = "master"
+  digest = "1:3c601000afc129811408fb080d0b69106ba85927da6645ada2444bb3d5c02bce"
   name = "github.com/patcito/monero"
   packages = [
     ".",
     "base58",
-    "crypto"
+    "crypto",
   ]
+  pruneopts = ""
   revision = "b11a914aef1a67a1b5f15cd4289fd44ea49dc0cc"
 
 [[projects]]
   branch = "master"
+  digest = "1:66a11d8d6bab2d2c5dacc1502a15f83066855c2bd84d69056d03c7f546bc87db"
   name = "github.com/vsergeev/btckeygenie"
   packages = ["btckey"]
-  revision = "bcbf17fcb87bd43681bef0cdcc528f1d836a6b61"
+  pruneopts = ""
+  revision = "413cbe3261adadbc974cecdbb4ea0b86c813c1a0"
 
 [[projects]]
   branch = "master"
+  digest = "1:678eb8275bb8e3394737d136f55da106956c699fb4ccc3e72aa115123cd28d0d"
   name = "golang.org/x/crypto"
   packages = [
     "blake2b",
     "pbkdf2",
-    "ripemd160"
+    "ripemd160",
+    "sha3",
   ]
-  revision = "95a4943f35d008beabde8c11e5075a1b714e6419"
+  pruneopts = ""
+  revision = "5c72a883971a4325f8c62bf07b6d38c20ea47a6a"
+
+[[projects]]
+  branch = "master"
+  digest = "1:5478108a0d5c575132f4bf44a1e0af1ec13bd21389f85be086d70e08b8431944"
+  name = "golang.org/x/sys"
+  packages = ["cpu"]
+  pruneopts = ""
+  revision = "4d22bbb62b3c04fb12f5f29e0fbfb42d71d50e82"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "918c3e6cae919bcf7c123b9bbff688e80ebd7b40f1826d89309e832c3587519d"
+  input-imports = [
+    "github.com/btcsuite/btcutil/base58",
+    "github.com/ethereum/go-ethereum/crypto",
+    "github.com/golang/crypto/argon2",
+    "github.com/patcito/monero",
+    "github.com/patcito/monero/crypto",
+    "github.com/vsergeev/btckeygenie/btckey",
+    "golang.org/x/crypto/pbkdf2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
