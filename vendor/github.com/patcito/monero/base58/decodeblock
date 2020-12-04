@@ -1,0 +1,3 @@
+PASS
+BenchmarkEncoderDecoder-2	  200000	     11635 ns/op	    2841 B/op	      70 allocs/op
+ok  	github.com/patcito/monero/base58	3.051s
