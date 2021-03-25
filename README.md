@@ -1,15 +1,15 @@
 ## MindWallet
 
-MindWallet is a deterministic cryptocurrency address generator heavily based on [MemWallet](https://github.com/dvdbng/memwallet) but using argon2 instead scrypt as hashing function,
-it's like [WarpWallet](https://keybase.io/warp/), but it works for Ethereum, Litecoin, Monero and Bitcoin. You never have to save or store your private key anywhere. Just pick a really good password - many random words, for example - and never use it for anything else.
+MindWallet is a deterministic cryptocurrency address generator heavily based on [MemWallet](https://github.com/dvdbng/memwallet) but using argon2 scrypt instead as hashing function,
+it's like [WarpWallet](https://keybase.io/warp/), but it works for Ethereum, Litecoin, Monero and Bitcoin. You never need to save or store your private key anywhere. Just pick a really good password - many random words, for example - and never use it for anything else.
 
-Given the same Passphrase and Salt, MemWallet will always generate the same address and private key, so if you only need to remember your password to access your funds.
+Given the same Passphrase and Salt, MindWallet will always generate the same address and private key, so you only need to remember your password to access your funds.
 
-For more information on why this is safer than a regular brainwallet, see [WarpWallet](https://keybase.io/warp/)'s help, MindWallet is a re-implementation of WarpWallet, but it works for other currencies thanks to MemWallet who makes up for most of the  most of the code. WarpWallet and MemWallet use the same algorithm, so WarpWallet and MemWallet will generate the same Bitcoin address for a given Passphrase and salt.
+For more information on why this is safer than a regular brainwallet, see [WarpWallet](https://keybase.io/warp/)'s help, MindWallet is a re-implementation of WarpWallet, but it works for other currencies thanks to MemWallet who makes up for most of the code. WarpWallet and MemWallet use the same algorithm, so WarpWallet and MemWallet will generate the same Bitcoin address for a given Passphrase and salt.
 
 Another difference between MindWallet and MemWallet is that MindWallet makes use of a web worker to make it faster, this forces you to make use of a web server.
 
-This repo containst an implementation of MindWallet in JavaScript and Go.
+This repo contains an implementation of MindWallet in JavaScript and Go.
 
 ### Instructions to run the html:
 
