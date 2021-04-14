@@ -3,6 +3,10 @@ package main
 import (
 	"crypto/sha256"
 	"fmt"
+	"os"
+	"strconv"
+	"time"
+
 	"github.com/btcsuite/btcutil/base58"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/golang/crypto/argon2"
@@ -10,9 +14,6 @@ import (
 	"github.com/patcito/monero/crypto"
 	"github.com/vsergeev/btckeygenie/btckey"
 	"golang.org/x/crypto/pbkdf2"
-	"os"
-	"strconv"
-	"time"
 )
 
 func usage() {
@@ -72,16 +73,16 @@ func main() {
 	_salt := fmt.Sprint(salt, string(rune(hash_pad)))
 	if strong == "strong" {
 		fmt.Printf("\n\n Depending on your CPU, this make take up to 1 minute or more\n\n")
-		key = argon2.Key([]byte(passphrase), []byte(salt), 256*1024, 256, 1, 32)
+		key = argon2.Key([]byte(_passphrase), []byte(_salt), 256, 256*1024, 4, 32)
 	} else if strong == "super_strong" {
 		fmt.Printf("\n\n Depending on your CPU, this make take up to 2 minutes or more\n\n")
-		key = argon2.Key([]byte(passphrase), []byte(salt), 256*1024, 512, 1, 32)
+		key = argon2.Key([]byte(_passphrase), []byte(_salt), 512, 256*1024, 4, 32)
 	} else if strong == "ridiculously_strong" {
 		fmt.Printf("\n\n Depending on your CPU, this make take up to 4 minutes or more, you've been warned!\n\n")
-		key = argon2.Key([]byte(passphrase), []byte(salt), 256*1024, 1024, 1, 32)
+		key = argon2.Key([]byte(_passphrase), []byte(_salt), 1024, 256*1024, 4, 32)
 	} else {
 		fmt.Printf("\n\n Depending on your CPU, this make take up to 10 seconds, you've been warned!\n\n")
-		key = argon2.Key([]byte(passphrase), []byte(salt), 256*1024, 8, 1, 32)
+		key = argon2.Key([]byte(_passphrase), []byte(_salt), 8, 256*1024, 4, 32)
 	}
 
 	//	key := argon2.Key([]byte("password"), []byte("somesalt"), 10, 1024, 1, 32)

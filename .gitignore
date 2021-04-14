@@ -8,4 +8,4 @@ dist/
 node_modules/
 pkg/
 mindwallet
-
+vendor/
