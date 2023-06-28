@@ -9,10 +9,10 @@ import (
 
 	"github.com/btcsuite/btcutil/base58"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
-	"github.com/golang/crypto/argon2"
 	"github.com/patcito/monero"
 	"github.com/patcito/monero/crypto"
 	"github.com/vsergeev/btckeygenie/btckey"
+	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/pbkdf2"
 )
 
@@ -72,17 +72,17 @@ func main() {
 	_passphrase := fmt.Sprint(passphrase, string(rune(hash_pad)))
 	_salt := fmt.Sprint(salt, string(rune(hash_pad)))
 	if strong == "strong" {
-		fmt.Printf("\n\n Depending on your CPU, this make take up to 1 minute or more\n\n")
-		key = argon2.Key([]byte(_passphrase), []byte(_salt), 256, 256*1024, 4, 32)
+		fmt.Printf("\n\n Depending on your CPU, this make take up to 4 minute or more\n\n")
+		key = argon2.IDKey([]byte(_passphrase), []byte(_salt), 256, 10*256*1024, 32, 32)
 	} else if strong == "super_strong" {
-		fmt.Printf("\n\n Depending on your CPU, this make take up to 2 minutes or more\n\n")
-		key = argon2.Key([]byte(_passphrase), []byte(_salt), 512, 256*1024, 4, 32)
+		fmt.Printf("\n\n Depending on your CPU, this make take up to 8 minutes or more\n\n")
+		key = argon2.IDKey([]byte(_passphrase), []byte(_salt), 512, 15*256*1024, 32, 32)
 	} else if strong == "ridiculously_strong" {
-		fmt.Printf("\n\n Depending on your CPU, this make take up to 4 minutes or more, you've been warned!\n\n")
-		key = argon2.Key([]byte(_passphrase), []byte(_salt), 1024, 256*1024, 4, 32)
+		fmt.Printf("\n\n Depending on your CPU, this make take up to 20 minutes or more, you've been warned!\n\n")
+		key = argon2.IDKey([]byte(_passphrase), []byte(_salt), 1024, 20*256*1024, 32, 32)
 	} else {
 		fmt.Printf("\n\n Depending on your CPU, this make take up to 10 seconds, you've been warned!\n\n")
-		key = argon2.Key([]byte(_passphrase), []byte(_salt), 8, 256*1024, 4, 32)
+		key = argon2.IDKey([]byte(_passphrase), []byte(_salt), 8, 10*256*1024, 32, 32)
 	}
 
 	//	key := argon2.Key([]byte("password"), []byte("somesalt"), 10, 1024, 1, 32)
@@ -90,6 +90,8 @@ func main() {
 
 	_passphrase = fmt.Sprint(passphrase, string(rune(hash_pad+1)))
 	_salt = fmt.Sprint(salt, string(rune(hash_pad+1)))
+	fmt.Printf("\n\n Now generating pbkdf2 key\n\n")
+
 	key2 := pbkdf2.Key([]byte(_passphrase), []byte(_salt), 65536, 32, sha256.New)
 
 	for i := 0; i < len(key); i++ {
